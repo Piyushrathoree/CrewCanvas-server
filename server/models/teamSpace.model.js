@@ -17,37 +17,6 @@ const teamSpaceSchema = new mongoose.Schema({
             ref: "User",
         },
     ],
-=======
-import mongoose ,{Schema}from "mongoose";
-
-
-// Define the Teamspace schema
-const teamspaceSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    description: {
-        type: String,
-        trim: true,
-    },
-    owner: {
-        type: Schema.Types.ObjectId,
-        ref: "User", // Reference to the User model
-        required: true,
-    },
-
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-
-});
-
-const TeamSpace = mongoose.model("TeamSpace", teamSpaceSchema);
-
-=======
     updatedAt: {
         type: Date,
         default: Date.now,
@@ -87,12 +56,12 @@ const TeamSpace = mongoose.model("TeamSpace", teamSpaceSchema);
 });
 
 // Pre-save hook to update the updatedAt field
-teamspaceSchema.pre("save", function (next) {
+teamSpaceSchema.pre("save", function (next) {
     this.updatedAt = Date.now();
     next();
 });
 
 // Create and export the Teamspace model
-const Teamspace = mongoose.model("Teamspace", teamspaceSchema);
+const Teamspace = mongoose.model("Teamspace", teamSpaceSchema);
 export default Teamspace;
 
