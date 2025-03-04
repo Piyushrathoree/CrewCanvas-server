@@ -1,3 +1,23 @@
+
+import mongoose, { Schema } from "mongoose";
+
+const teamSpaceSchema = new mongoose.Schema({
+    projectName: {
+        type: String,
+        required: true,
+    },
+    OwnerId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    members: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+=======
 import mongoose ,{Schema}from "mongoose";
 
 
@@ -17,10 +37,17 @@ const teamspaceSchema = new Schema({
         ref: "User", // Reference to the User model
         required: true,
     },
+
     createdAt: {
         type: Date,
         default: Date.now,
     },
+
+});
+
+const TeamSpace = mongoose.model("TeamSpace", teamSpaceSchema);
+
+=======
     updatedAt: {
         type: Date,
         default: Date.now,
@@ -68,3 +95,4 @@ teamspaceSchema.pre("save", function (next) {
 // Create and export the Teamspace model
 const Teamspace = mongoose.model("Teamspace", teamspaceSchema);
 export default Teamspace;
+
