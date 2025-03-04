@@ -23,4 +23,4 @@ const teamSpaceSchema = new mongoose.Schema({
 });
 
 const TeamSpace = mongoose.model("TeamSpace", teamSpaceSchema);
-export default TeamSpace;
+
