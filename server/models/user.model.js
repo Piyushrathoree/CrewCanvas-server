@@ -1,4 +1,4 @@
-import mongoose from mongoose;
+import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
 const userSchema = mongoose.Schema({
@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
     password:{
         type:String,
         required:true,
+        select:false
     },
     picture:{
         type:String,
