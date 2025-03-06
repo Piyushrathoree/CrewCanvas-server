@@ -10,39 +10,63 @@ const RegisterUser = async (req, res) => {
         throw new Error({ message: "User already exists" });
     }
 
-    const user = await User.create(name, email, password, picture);
+    const user = new User({
+        name: { firstName: name.firstName, lastName: name.lastName || "" },
+        email,
+        picture,
+        password:await User.hashPassword(password),
+    });
 
     if (!user) {
         return res.status(404).json({ message: "Register failed, Try again" });
     }
-
-    res.status(200).json({ message: "Registered succesfully", user });
+    await user.save();
+    const finalUser = await User.findById(user._id).select("-password"); // go for proper reference
+    res.status(201).json({ message: "Registered successfully", finalUser });
 };
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
-    if (!email || !password) throw Error; // can be replaced with a proper error message
 
-    const user = await User.findOne({ email }).select("+password");
+    if (!email || !password) {
+        return res
+            .status(400)
+            .json({ message: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ email });
     if (!user) {
         return res
             .status(404)
-            .json({ message: "user not found , please register" });
+            .json({ message: "User not found, please register" });
     }
-    const isPasswordCorrect = await User.matchPassword(password); //
-    if (!isPasswordCorrect) {
-        return res
-            .status(401)
-            .json({ message: "wrong password ,lease try again" });
+
+    try {
+        const isPasswordCorrect = await user.isPasswordCorrect(password);
+        console.log("Password comparison result:", isPasswordCorrect);
+
+        if (!isPasswordCorrect) {
+            return res
+                .status(401)
+                .json({ message: "Wrong password, please try again" });
+        }
+
+        const token = user.generateToken();
+        const loggedUser = await User.findById(user._id).select("-password");
+
+        res.status(200).json({
+            message: "Login successful",
+            token,
+            loggedUser,
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-    const token = await User.generateToken();
-    if (!token) {
-        return res.status(404).json({ message: "token not found" });
-    }
-    res.status(200).json({ message: "login successfully ", token, user });
 };
+
 const logOut = async (req, res) => {
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1] || req.cookies.token;
     if (!token) {
         return res.status(404).json({ message: "token not found" });
     }
