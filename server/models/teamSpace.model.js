@@ -22,33 +22,27 @@ const teamSpaceSchema = new mongoose.Schema({
         default: Date.now,
     },
     // // Optional fields for related data : can be implemented later 
-    // documents: [
+    // notes: [ // note model 
     //     {
     //         type: Schema.Types.ObjectId,
-    //         ref: "Document", // Reference to the Document model
+    //         ref: "note", // Reference to the Document model
     //     },
     // ],
-    // projects: [
+    // canvas://  canvas only one for a team global 
     //     {
     //         type: Schema.Types.ObjectId,
-    //         ref: "Project", // Reference to the Project model
+    //         ref: "canvas", // Reference to the Project model
     //     },
-    // ],
-    // messages: [
+    
+    // chat: // chat model single for a team
     //     {
     //         type: Schema.Types.ObjectId,
-    //         ref: "Message", // Reference to the Message model
+    //         ref: "chat", // Reference to the Message model
     //     },
-    // ],
-    // members: [
-    //     {
-    //         user: {
-    //             type: Schema.Types.ObjectId,
-    //             ref: "User", // Reference to the User model
-    //         },
-    //         role: {
+
+    //       role: {
     //             type: String,
-    //             enum: ["admin", "member", "viewer"],
+    //             enum: ["admin", "member"],
     //             default: "member",
     //         },
     //     },

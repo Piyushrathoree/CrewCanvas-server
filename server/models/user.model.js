@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
+
 
 const userSchema = mongoose.Schema({
     name:{
@@ -19,7 +22,7 @@ const userSchema = mongoose.Schema({
     password:{
         type:String,
         required:true,
-        select:false
+        // select:false
     },
     picture:{
         type:String,
@@ -29,18 +32,30 @@ const userSchema = mongoose.Schema({
 {timestamps:true}
 );
 
-// utility for changing password in the 
-userSchema.pre("save", async function (next) {
-    if(!this.isModified("password")){
-        next();
-    }
-    // const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, 10);
-});
+userSchema.statics.hashPassword= async function(password){
+    return await bcrypt.hash(password ,10);
+}
+// // utility for changing password in the 
+// userSchema.pre("save", async function (next) {
+//     if(!this.isModified("password")){
+//         next();
+//     }
+//     // const salt = await bcrypt.genSalt(10);
+//     this.password =  bcrypt.hash(this.password, 10);
+// });
 
-userSchema.statics.matchPassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password)
+userSchema.methods.isPasswordCorrect = async function (password) {
+    if (!password) {
+        throw new Error("Password is required for comparison");
+    }
+    console.log(password);
+    console.log(this.password);
+    
+    
+    const match = await bcrypt.compare(password, this.password);
+    return match;
 };
+
 
 userSchema.methods.generateToken = function  (){
     return jwt.sign({_id:this._id},process.env.JWT_SECRET ,{expiresIn: "48h"})
