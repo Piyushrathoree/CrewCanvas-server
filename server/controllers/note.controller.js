@@ -1,5 +1,5 @@
-import Note from "../models/note.model";
-import Teamspace from "../models/teamspace.model";
+import Note from "../models/note.model.js";
+import Teamspace from "../models/teamspace.model.js";
 
 const createNote = async (req, res) => {
     const { title, content } = req.body;
