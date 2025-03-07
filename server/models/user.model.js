@@ -3,33 +3,46 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 
-
-const userSchema = mongoose.Schema({
-    name:{
-        firstName:{
+const userSchema = mongoose.Schema(
+    {
+        name: {
+            firstName: {
+                type: String,
+                required: true,
+            },
+            lastName: {
+                type: String,
+            },
+        },
+        email: {
             type: String,
-            required:true,
+            required: true,
+            unique: true,
         },
-        lastName:{
-            type:String,
+        teamspaces: [
+            {
+                teamspace: {
+                    type: Schema.Types.ObjectId, // Reference to a Teamspace
+                    ref: "Teamspace",
+                },
+                role: {
+                    type: String,
+                    enum: ["owner","admin", "member"], // Roles could be expanded later
+                    default: "member",
+                },
+            },
+        ],
+        password: {
+            type: String,
+            required: true,
+            // select:false
+        },
+        picture: {
+            type: String,
+            default: "", //for cloudinary url
         },
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    password:{
-        type:String,
-        required:true,
-        // select:false
-    },
-    picture:{
-        type:String,
-        default:'', //for cloudinary url
-    },
-},
-{timestamps:true}
+    { timestamps: true }
 );
 
 userSchema.statics.hashPassword= async function(password){
@@ -55,7 +68,6 @@ userSchema.methods.isPasswordCorrect = async function (password) {
     const match = await bcrypt.compare(password, this.password);
     return match;
 };
-
 
 userSchema.methods.generateToken = function  (){
     return jwt.sign({_id:this._id},process.env.JWT_SECRET ,{expiresIn: "48h"})

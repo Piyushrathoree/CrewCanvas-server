@@ -42,5 +42,5 @@ noteSchema.pre("save", function (next) {
 // Index for efficient retrieval
 noteSchema.index({ teamspaceId: 1, createdAt: 1 });
 
-const Note = mongoose.model("Note", noteSchema);
+const Note = mongoose.model("Notes", noteSchema);
 export default Note;

@@ -1,61 +1,56 @@
-
 import mongoose, { Schema } from "mongoose";
 
-const teamSpaceSchema = new mongoose.Schema({
-    projectName: {
-        type: String,
-        required: true,
-    },
-    OwnerId: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-    members: [
-        {
+const teamSpaceSchema = new mongoose.Schema(
+    {
+        projectName: {
+            type: String,
+            required: true,
+        },
+        OwnerId: {
             type: Schema.Types.ObjectId,
             ref: "User",
+            required: true,
         },
-    ],
-    updatedAt: {
-        type: Date,
-        default: Date.now,
+        members: [
+            {
+                user: { type: Schema.Types.ObjectId, ref: "User" },
+                role: {
+                    type: String,
+                    enum: ["admin", "member"],
+                    default: "member",
+                },
+            },
+        ],
+        updatedAt: {
+            type: Date,
+            default: Date.now,
+        },
+        canvas: {
+            type: Schema.Types.ObjectId,
+            ref: "Canvas",
+            required: true,
+        },
+        chat: {
+            type: Schema.Types.ObjectId,
+            ref: "Chat",
+            required: true,
+        },
+        tasks: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Task",
+            },
+        ],
+        notes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Notes",
+            },
+        ],
     },
-    // // Optional fields for related data : can be implemented later 
-    // notes: [ // note model 
-    //     {
-    //         type: Schema.Types.ObjectId,
-    //         ref: "note", // Reference to the Document model
-    //     },
-    // ],
-    // canvas://  canvas only one for a team global 
-    //     {
-    //         type: Schema.Types.ObjectId,
-    //         ref: "canvas", // Reference to the Project model
-    //     },
-    
-    // chat: // chat model single for a team
-    //     {
-    //         type: Schema.Types.ObjectId,
-    //         ref: "chat", // Reference to the Message model
-    //     },
-
-    //       role: {
-    //             type: String,
-    //             enum: ["admin", "member"],
-    //             default: "member",
-    //         },
-    //     },
-    // ],
-});
-
-// Pre-save hook to update the updatedAt field
-teamSpaceSchema.pre("save", function (next) {
-    this.updatedAt = Date.now();
-    next();
-});
+    { timestamps: true }
+);
 
 // Create and export the Teamspace model
 const Teamspace = mongoose.model("Teamspace", teamSpaceSchema);
 export default Teamspace;
-
