@@ -36,13 +36,13 @@ const listNotesByTeamspace = async (req, res) => {
     if (!teamSpaceId) {
         return res.status(404).json({ message: "Teamspace doesnt exist" });
     }
-    const notesList = await Teamspace.findById({ _id: teamSpaceId });
+    const currentTeamspace =await Teamspace.findById({ _id: teamSpaceId });
 
-    if (!notesList) {
+    if (!currentTeamspace) {
         return res.status(200).json({ message: "No notes added YET" });
     }
 
-    res.status(200).json({ notesList });
+    res.status(200).json({ notes:currentTeamspace.notes });
 };
 const updateNote = async (req, res) => {
     const { noteId } = req.params;
@@ -68,7 +68,7 @@ const deleteNote = async (req, res) => {
     if (!noteId) {
         return res.status(404).json({ message: "Note id not found" });
     }
-    const deletedNote = await Note.findByIdAndDelete({ _id: noteId });
+    const deletedNote = await Note.findByIdAndDelete({ noteId });
 
     if (!deletedNote) {
         return res
