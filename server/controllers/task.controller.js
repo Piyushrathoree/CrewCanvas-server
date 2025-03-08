@@ -116,4 +116,4 @@ const toggleTaskStatus = async (req,res) => {
     res.json({ message: "Task Updated Successfullly" });
 };
 
-export { createTask, getTask, updateTask, deleteTask, getTasksFromTeamspace };
+export { createTask, getTask, updateTask, deleteTask, getTasksFromTeamspace , toggleTaskStatus};
