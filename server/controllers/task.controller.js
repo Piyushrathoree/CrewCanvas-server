@@ -99,6 +99,21 @@ const deleteTask = async (req, res) => {
     });
 };
 
-const toggleStatus = async () => {};
+const toggleTaskStatus = async (req,res) => {
+    const {taskId} = req.params;
+    if (!taskId) {
+        return res.status(404).json({ message: "task id not found " });
+    }
+    const task = await Task.findByIdAndUpdate(
+        taskId,
+        { $set: { taskStatus: !taskStatus } },
+        { new: true }
+    );
+
+    if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+    }
+    res.json({ message: "Task Updated Successfullly" });
+};
 
 export { createTask, getTask, updateTask, deleteTask, getTasksFromTeamspace };
