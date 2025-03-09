@@ -1,19 +1,17 @@
 import mongoose, { Schema, Types } from "mongoose";
 
 const chatSchema = mongoose.Schema({
-    sender: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
+    messages: [{
+        sender: { type: Schema.Types.ObjectId, ref: 'User'},
+        content: { type: String, required: true },
+        timestamp: { type: Date, default: Date.now }
+      }],
     TeamSpace: {
         type: Schema.Types.ObjectId,
         ref: "TeamSpace",
         required: true,
     },
-    message: {
-        type: String,
-    },
+    
 });
 
 const Chat = mongoose.model("Chat", chatSchema);
