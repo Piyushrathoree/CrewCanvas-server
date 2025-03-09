@@ -98,7 +98,7 @@ export const deleteMessage = async (req, res) => {
 export const deleteWholeChat = async (req,res)=>{
     const {teamspaceId} = req.params;
     if(!teamspace){
-        return res.status(404).json(mesage:"teamspace not found")
+        return res.status(404).json({message:"teamspace not found"})
     }
     
     const teamspace = await Teamspace.findById(teamspaceId)
