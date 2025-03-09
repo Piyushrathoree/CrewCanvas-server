@@ -77,7 +77,7 @@ export const deleteMessage = async (req, res) => {
     const senderId = req.user._id
     const teamspace = await Teamspace.findById(teamspaceId);
     if(!teamspace){
-        return res.status(404).json(mesage:"teamspace not found")
+        return res.status(404).json({message:"teamspace not found"})
     }
     const isMember = teamspace.members.some(member => member.user.toString() === senderId);
     if(!isMember || isMember.role !== 'admin'){
