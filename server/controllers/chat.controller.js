@@ -107,7 +107,7 @@ export const deleteWholeChat = async (req,res)=>{
     }   
     // delete the whole chat if user is owner
     const result = await Chat.findByIdAndDelete({teamspaceId})
-    if (!chat) {
+    if (!result) {
         return res.status(404).json({ error: 'Chat not found' });
       }
 
