@@ -3,13 +3,13 @@ import Teamspace from "../models/teamSpace.model.js";
 
 // const defaultSender = req.user._id;
 export const getChatByTeamspace = async (req, res) => {
-    const { teamSpaceId } = req.params;
+    const { teamspaceId } = req.params;
 
-    if (!teamSpaceId) {
+    if (!teamspaceId) {
         return res.statusd(404).json({ message: "Team Space doesnt exist" });
     }
 
-    const teamspace = await Teamspace.findOne({ _id: teamSpaceId });
+    const teamspace = await Teamspace.findOne({ _id: teamspaceId });
     // findById should used without curly braces
 
     if (!teamspace) {
@@ -26,7 +26,7 @@ export const getChatByTeamspace = async (req, res) => {
             .json({ message: "User not a part of the Team Space" });
     }
 
-    const chat = await Chat.findOne({ teamSpaceId });
+    const chat = await Chat.findOne({ teamspaceId });
 
     if (!chat) {
         return res.status(401).json({ message: "Chat does not exist" });
@@ -73,17 +73,17 @@ export const addMessageToChat = async (req, res) => {
     res.status(201).json(newMessage);
 };
 export const deleteMessage = async (req, res) => {
-    const {teamSpaceId, messageId} = req.params;
+    const {teamspaceId, messageId} = req.params;
     const senderId = req.user._id
     const teamspace = await Teamspace.findById(teamspaceId);
     if(!teamspace){
         return res.status(404).json(mesage:"teamspace not found")
     }
     const isMember = teamspace.members.some(member => member.user.toString() === senderId);
-    if(!member || member.role !== 'admin'){
+    if(!isMember || isMember.role !== 'admin'){
         return res.status(401).json({message:"current user is not a memeber of teamspace"})
     }
-    const result = await User.updateOne({teamSpaceId} ,{
+    const result = await User.updateOne({teamspaceId} ,{
         $pull:{messages:{_id:messageId}}
     })
     // something got changes or not will checked by below method 
