@@ -29,6 +29,35 @@ const getCanvasByTeamspace = async (req, res) => {
     res.status(200).json({ message: { canvas } });
 };
 
-const updateCanvasData = async (req, res) => {};
+const updateCanvasData = async (req, res) => {
+    const { data } = req.body;
+    const { teamSpaceId } = req.params;
+    if (!data) {
+        return res.status(404).json({ message: "data not found" });
+    }
+
+    const teamspace = await Teamspace.findOne({ _id: teamSpaceId });
+    if (!teamspace) {
+        return res.status(404).json({ message: "TeamSpace not found" });
+    }
+    const isMember = teamspace.members.some(
+        (member) => member.user.toString() === req.user._id
+    );
+    if (!isMember) {
+        return res
+            .status(401)
+            .json({ message: "User not a part of the TeamSpace" });
+    }
+    let canvas = await Canvas.findOne({ teamSpaceId });
+    if (!canvas) {
+        canvas = new Canvas({ teamSpaceId, canvasData: data });
+    } else {
+        canvas.data = data;
+        canvas.updatedAt = Date.now();
+    }
+    await canvas.save();
+    res.status(200).json({ message: "Canvas updated successfully" });
+    
+};
 
 export { getCanvasByTeamspace, updateCanvasData };
