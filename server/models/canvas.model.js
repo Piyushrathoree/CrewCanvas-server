@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose ,{ Schema } from "mongoose";
+
 
 // Define the Canvas schema
 const canvasSchema = new Schema({
