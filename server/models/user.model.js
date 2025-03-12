@@ -1,7 +1,6 @@
-import mongoose from 'mongoose';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-
+import mongoose, { Schema } from "mongoose";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const userSchema = mongoose.Schema(
     {
@@ -27,7 +26,7 @@ const userSchema = mongoose.Schema(
                 },
                 role: {
                     type: String,
-                    enum: ["owner","admin", "member"], // Roles could be expanded later
+                    enum: ["owner", "admin", "member"], // Roles could be expanded later
                     default: "member",
                 },
             },
@@ -45,10 +44,10 @@ const userSchema = mongoose.Schema(
     { timestamps: true }
 );
 
-userSchema.statics.hashPassword= async function(password){
-    return await bcrypt.hash(password ,10);
-}
-// // utility for changing password in the 
+userSchema.statics.hashPassword = async function (password) {
+    return await bcrypt.hash(password, 10);
+};
+// // utility for changing password in the
 // userSchema.pre("save", async function (next) {
 //     if(!this.isModified("password")){
 //         next();
@@ -63,15 +62,16 @@ userSchema.methods.isPasswordCorrect = async function (password) {
     }
     console.log(password);
     console.log(this.password);
-    
-    
+
     const match = await bcrypt.compare(password, this.password);
     return match;
 };
 
-userSchema.methods.generateToken = function  (){
-    return jwt.sign({_id:this._id},process.env.JWT_SECRET ,{expiresIn: "48h"})
-} 
+userSchema.methods.generateToken = function () {
+    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: "48h",
+    });
+};
 
 const User = mongoose.model("User", userSchema);
 
