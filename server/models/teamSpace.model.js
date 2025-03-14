@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const teamSpaceSchema = new mongoose.Schema(
     {
-        projectName: {
+        teamspaceName: {
             type: String,
             required: true,
         },
