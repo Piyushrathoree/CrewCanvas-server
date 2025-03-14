@@ -6,9 +6,9 @@ const chatSchema = mongoose.Schema({
         ref: "User",
         required: true,
     },
-    TeamSpace: {
+    TeamspaceId: {
         type: Schema.Types.ObjectId,
-        ref: "TeamSpace",
+        ref: "Teamspace",
         required: true,
     },
     message: {
