@@ -21,6 +21,12 @@ const canvasSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
+    teamspaceId: {
+        type: Schema.Types.ObjectId,
+        ref: "Teamspace",
+        required: true,
+        unique: true, // Ensures one canvas per Teamspace
+    },
 });
 
 // Pre-save hook to update the updatedAt field
@@ -58,4 +64,4 @@ canvasSchema.methods.updateCanvasData = async function (newData, userId) {
 
 // Create and export the Canvas model
 const Canvas = mongoose.model("Canvas", canvasSchema);
-module.exports = Canvas;
+export default Canvas
