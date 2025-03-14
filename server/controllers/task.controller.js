@@ -1,5 +1,5 @@
 import Task from "../models/task.model.js";
-import Teamspace from "../models/teamSpace.model.js";
+import Teamspace from "../models/teamspace.model.js";
 
 const createTask = async (req, res) => {
     const { taskName, taskDescription, taskAssignedTo } = req.body;
@@ -39,6 +39,7 @@ const getTask = async (req, res) => {
     }
     res.status(200).json(task);
 };
+
 const getTasksFromTeamspace = async (req, res) => {
     const { teamspcaeId } = req.params;
     if (!teamspcaeId) {
