@@ -49,7 +49,7 @@ const updateCanvasData = async (req, res) => {
             .json({ message: "User not a part of the TeamSpace" });
     }
     let canvas = await Canvas.findOne({ teamSpaceId });
-    if (!canvas) {
+    if (!canvas){
         canvas = new Canvas({ teamSpaceId, canvasData: data });
     } else {
         canvas.data = data;
@@ -59,5 +59,6 @@ const updateCanvasData = async (req, res) => {
     res.status(200).json({ message: "Canvas updated successfully" });
     
 };
+
 
 export { getCanvasByTeamspace, updateCanvasData };
