@@ -1,14 +1,37 @@
-import express from "express";
-import { loginUser, logOut, RegisterUser } from "../controllers/user.controller.js";
+import { Router } from "express";
+import {
+    registerUser,
+    loginUser,
+    logout,
+    verifyEmail,
+    forgotPassword,
+    resetPassword,
+} from "../controllers/user.controller.js";
+import userMiddleware from "../middlewares/user.middleware.js";
 
-const router= express.Router();
+const router = Router();
 
-router.get("/", (_, res) => {
-    res.send("hello , world");
+//it is only for postman purpose
+// router.get("/protected", userMiddleware, (req, res) => {
+//     const user = req.user;
+//     res.status(200).json({
+//         success: true,
+//         user,
+//         message: "your are authenticated properly",
+//     });
+// });
+
+// ✅ Normal Authentication Routes
+router.post("/signup", registerUser);
+router.post("/login", loginUser);
+router.post("/logout", logout);
+
+router.post("/verify-email", verifyEmail);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
+router.get("/protected", userMiddleware, (_, res) => {
+    res.send(
+        '<div style="background-color: black; color: white; height: 100vh; display: flex; justify-content: center; align-items: center;"><h1>your freaking middleware is working totally fine 😂☠️</h1> </div>'
+    );
 });
-
-router.post ("/register" , RegisterUser)
-router.post("/login",loginUser)
-router.post('/logout',logOut)
-
 export default router;
