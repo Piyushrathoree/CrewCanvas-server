@@ -12,6 +12,6 @@ app.get("/", (_, res) => {
     res.send("hello , world");
 });
 
-app.use("/api/v1/", router);
+app.use("/api/auth/", router);
 
 export default app;
