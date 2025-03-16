@@ -6,6 +6,15 @@ const createTask = async (req, res) => {
 
     const taskAssignedBy = req.user._id;
 
+    const { teamspaceId } = req.params;
+    if (!teamspaceId) {
+        return res.status(404).json({ message: "Teamspace not found" });
+    }
+    const currentTeamspace = await Teamspace.findById(teamspaceId);
+    if (!currentTeamspace) {
+        return res.status(404).json({ message: "Teamspace not found" });
+    }
+
     const taskExists = await Task.findOne({ taskName });
 
     if (taskExists) {
@@ -19,33 +28,55 @@ const createTask = async (req, res) => {
         taskDescription,
         taskAssignedTo,
         taskAssignedBy,
+        teamspaceId,
     });
 
     if (!task) {
         return res.status(401).json({ message: "Error in creating a T sk" });
     }
     await task.save();
+    
+    // Add note to teamspace's notes array
+    await Teamspace.findByIdAndUpdate(teamspaceId, {
+        $push: { notes: note._id },
+    });
     res.status(201).json({ message: "Task Created successfully", task });
 };
 
 const getTask = async (req, res) => {
-    const { taskId } = req.params;
-    if (!taskId) {
-        return res.status(404).json({ message: "Task id is missing" });
+    const { teamspaceId, taskId } = req.params;
+
+    if (!teamspaceId || !taskId) {
+        return res
+            .status(404)
+            .json({ message: "Teamspace ID or Task ID not provided" });
     }
-    const task = await Task.findById(taskId);
+
+    const teamspace = await Teamspace.findById(teamspaceId);
+    if (!teamspace) {
+        return res.status(404).json({ message: "Teamspace not found" });
+    }
+
+    const task = await Task.findOne({
+        _id: taskId,
+        teamspaceId: teamspaceId,
+    });
+
     if (!task) {
-        res.status(404).json({ message: "task not found" });
+        return res
+            .status(404)
+            .json({ message: "Task not found in this teamspace" });
     }
-    res.status(200).json(task);
+
+    res.status(200).json({ task });
 };
 
 const getTasksFromTeamspace = async (req, res) => {
-    const { teamspcaeId } = req.params;
-    if (!teamspcaeId) {
+    const { teamspaceId } = req.params;
+    if (!teamspaceId) {
         return res.status(404).json({ message: "teamspace not found" });
     }
-    const currentTeamspace = await Teamspace.find({ _id: teamspcaeId });
+    const currentTeamspace = await Teamspace.find({ _id: teamspaceId });
     if (!currentTeamspace) {
         return res.status(200).json({ message: "No notes added YET" });
     }
@@ -54,67 +85,120 @@ const getTasksFromTeamspace = async (req, res) => {
 };
 
 const updateTask = async (req, res) => {
-    const { taskId } = req.params;
+    const { teamspaceId, taskId } = req.params;
     const { taskName, taskDescription } = req.body;
 
-    if (!taskId) {
-        return res.status(404).json({ message: "Task id not found " });
+    if (!teamspaceId || !taskId) {
+        return res
+            .status(404)
+            .json({ message: "Teamspace ID or Task ID not provided" });
+    }
+
+    const teamspace = await Teamspace.findById(teamspaceId);
+    if (!teamspace) {
+        return res.status(404).json({ message: "Teamspace not found" });
     }
 
     if (!taskName || !taskDescription) {
-        return res.status(404).json({ message: "No such task exists" });
+        return res
+            .status(400)
+            .json({ message: "Task name and description are required" });
     }
 
     const task = await Task.findOneAndUpdate(
         {
             _id: taskId,
-            createdBy: req.user._id,
+            teamspaceId: teamspaceId,
+            taskAssignedBy: req.user._id,
         },
         { taskName, taskDescription },
         { new: true }
     );
 
     if (!task) {
-        return res.status(404).json({ message: "Task not found" });
+        return res
+            .status(404)
+            .json({ message: "Task not found in this teamspace" });
     }
-    res.json({ message: "Task Updated Successfullly" });
+
+    res.status(200).json({ message: "Task Updated Successfully", task });
 };
 
 const deleteTask = async (req, res) => {
-    const { taskId } = req.params;
+    const { teamspaceId, taskId } = req.params;
 
-    if (!taskId) {
-        return res.status(404).json({ message: "task id not found " });
-    }
-    const deletedTask = await Task.findByIdAndDelete({ taskId });
-
-    if (!deleteTask) {
+    if (!teamspaceId || !taskId) {
         return res
-            .status(401)
-            .json({ message: "something went wrong while deleting the task " });
+            .status(404)
+            .json({ message: "Teamspace ID or Task ID not provided" });
     }
 
-    res.status(201).json({
-        message: "notes successfully deleted ",
+    const teamspace = await Teamspace.findById(teamspaceId);
+    if (!teamspace) {
+        return res.status(404).json({ message: "Teamspace not found" });
+    }
+
+    const deletedTask = await Task.findOneAndDelete({
+        _id: taskId,
+        teamspaceId: teamspaceId,
+    });
+
+    if (!deletedTask) {
+        return res
+            .status(404)
+            .json({ message: "Task not found in this teamspace" });
+    }
+
+    // Remove task reference from teamspace
+    await Teamspace.findByIdAndUpdate(teamspaceId, {
+        $pull: { tasks: taskId },
+    });
+
+    res.status(200).json({
+        message: "Task successfully deleted",
         deletedTask,
     });
 };
 
-const toggleTaskStatus = async (req,res) => {
-    const {taskId} = req.params;
-    if (!taskId) {
-        return res.status(404).json({ message: "task id not found " });
+const toggleTaskStatus = async (req, res) => {
+    const { teamspaceId, taskId } = req.params;
+
+    if (!teamspaceId || !taskId) {
+        return res
+            .status(404)
+            .json({ message: "Teamspace ID or Task ID not provided" });
     }
-    const task = await Task.findByIdAndUpdate(
+
+    const teamspace = await Teamspace.findById(teamspaceId);
+    if (!teamspace) {
+        return res.status(404).json({ message: "Teamspace not found" });
+    }
+
+    const task = await Task.findOne({ _id: taskId, teamspaceId: teamspaceId });
+    if (!task) {
+        return res
+            .status(404)
+            .json({ message: "Task not found in this teamspace" });
+    }
+
+    const newStatus = task.taskStatus === "Pending" ? "Completed" : "Pending";
+    const updatedTask = await Task.findByIdAndUpdate(
         taskId,
-        { $set: { taskStatus: !taskStatus } },
+        { taskStatus: newStatus },
         { new: true }
     );
 
-    if (!task) {
-        return res.status(404).json({ message: "Task not found" });
-    }
-    res.json({ message: "Task Updated Successfullly" });
+    res.status(200).json({
+        message: "Task status updated successfully",
+        task: updatedTask,
+    });
 };
 
-export { createTask, getTask, updateTask, deleteTask, getTasksFromTeamspace , toggleTaskStatus};
+export {
+    createTask,
+    getTask,
+    updateTask,
+    deleteTask,
+    getTasksFromTeamspace,
+    toggleTaskStatus,
+};
