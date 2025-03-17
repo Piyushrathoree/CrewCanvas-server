@@ -7,7 +7,7 @@ import {
     forgotPassword,
     resetPassword,
 } from "../controllers/user.controller.js";
-import userMiddleware from "../middlewares/user.middleware.js";
+import  { verifyJWT } from "../middlewares/user.middleware.js";
 
 const router = Router();
 
@@ -29,7 +29,7 @@ router.post("/logout", logout);
 router.post("/verify-email", verifyEmail);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
-router.get("/protected", userMiddleware, (_, res) => {
+router.get("/protected", verifyJWT, (_, res) => {
     res.send(
         '<div style="background-color: black; color: white; height: 100vh; display: flex; justify-content: center; align-items: center;"><h1>your freaking middleware is working totally fine 😂☠️</h1> </div>'
     );
