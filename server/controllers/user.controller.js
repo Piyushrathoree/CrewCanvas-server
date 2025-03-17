@@ -10,13 +10,15 @@ import {
 } from "../mail/emails.js";
 
 
-
-
 export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
         return res.status(400).send("Please fill all the fields");
     }
+// -----------------------------------------------------
+// await User.collection.dropIndex("name_1");
+// ----------------------------------------------------
+
 
     let existingUser = await User.findOne({ email });
     if (existingUser) return res.status(401).send("User already exists");
