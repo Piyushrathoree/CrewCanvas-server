@@ -8,17 +8,21 @@ import {
     deleteTeamspace,
 } from "../controllers/teamspace.controller.js";
 
-import userMiddleware from "../middlewares/user.middleware.js";
+import {verifyJWT} from "../middlewares/user.middleware.js";
 
-const router = Router();
+const teamspaceRouter = Router();
 
+teamspaceRouter.use(verifyJWT);
 // routes
 
-router.post("/create-teampspace", userMiddleware, createTeamspace);
-router.get("/my-teamspace", userMiddleware, getTeamspace);
-router.put("/add-member", userMiddleware, addMember);
-router.put("/remove-member", userMiddleware, removeMember);
-router.delete("/delete-teamspace", userMiddleware, deleteTeamspace);
+teamspaceRouter.post("/create-teamspace", createTeamspace);
 
+teamspaceRouter.get("/:teamspaceId", getTeamspace);
 
-export default router;
+teamspaceRouter.put("/:teamspaceId/add-member", addMember);
+
+teamspaceRouter.put("/:teamspaceId/remove-member", removeMember);
+
+teamspaceRouter.delete("/delete-teamspace/:teamspaceId", deleteTeamspace);
+
+export default teamspaceRouter;
