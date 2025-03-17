@@ -9,6 +9,9 @@ import {
     sendResetSuccessfulEmail,
 } from "../mail/emails.js";
 
+
+
+
 export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -30,7 +33,9 @@ export const registerUser = async (req, res) => {
     });
 
     // directly authenticating user
-    const token = await User.generateAuthToken();
+    const token = user.generateAuthToken();
+
+    if(!token) return res.status(500).json({ message: "Internal server error" });
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -57,7 +62,7 @@ export const loginUser = async (req, res) => {
         if (!user || !(await user.isPasswordCorrect(password))) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
-        const token = await User.generateAuthToken();
+        const token = user.generateAuthToken();
 
         user.lastLogin = new Date();
         user.save();
