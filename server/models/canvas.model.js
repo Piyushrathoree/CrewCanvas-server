@@ -24,7 +24,6 @@ const canvasSchema = new Schema({
     teamspaceId: {
         type: Schema.Types.ObjectId,
         ref: "Teamspace",
-        required: true,
         unique: true, // Ensures one canvas per Teamspace
     },
 });
