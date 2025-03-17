@@ -24,8 +24,9 @@ const canvasSchema = new Schema({
     teamspaceId: {
         type: Schema.Types.ObjectId,
         ref: "Teamspace",
-        unique: true, // Ensures one canvas per Teamspace
-    },
+        unique:true,
+        required :true
+    }
 });
 
 // Pre-save hook to update the updatedAt field
