@@ -28,12 +28,14 @@ const teamSpaceSchema = new mongoose.Schema(
         canvas: {
             type: Schema.Types.ObjectId,
             ref: "Canvas",
-            required: true,
+            unique: true,
+            // required: true,
         },
         chat: {
             type: Schema.Types.ObjectId,
             ref: "Chat",
-            required: true,
+            unique: true,
+            // required: true,
         },
         tasks: [
             {
