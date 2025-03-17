@@ -1,5 +1,5 @@
 import Canvas from "../models/canvas.model";
-import Teamspace from "../models/teamSpace.model";
+import Teamspace from "../models/teamspace.model";
 
 const getCanvasByTeamspace = async (req, res) => {
     const { teamSpaceId } = req.params;
