@@ -1,20 +1,24 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const chatSchema = mongoose.Schema({
-    sender: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-    },
-    TeamspaceId: {
+const chatSchema = new Schema({
+    teamspaceId: {
         type: Schema.Types.ObjectId,
         ref: "Teamspace",
         unique: true,
+        required: true,
     },
-    message: {
-        type: String,
-    },
+    messages: [
+        {
+            sender: {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+                required: true,
+            }, // Each message has a sender
+            text: { type: String, required: true },
+            timestamp: { type: Date, default: Date.now },
+        },
+    ],
 });
 
 const Chat = mongoose.model("Chat", chatSchema);
-
 export default Chat;
