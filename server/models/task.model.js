@@ -10,12 +10,12 @@ const taskSchema = new mongoose.Schema(
             type: String,
         },
         taskAssignedBy: {
-            type: Schema.Type.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
         taskAssignedTo: {
-            type: Schema.Type.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
@@ -27,7 +27,6 @@ const taskSchema = new mongoose.Schema(
         teamspaceId: {
             type: Schema.Types.ObjectId,
             ref: "Teamspace",
-            required: true,
             unique: true, // Ensures one canvas per Teamspace
         },
     },
