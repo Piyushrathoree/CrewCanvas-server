@@ -4,6 +4,7 @@ import router from "./routes/user.route.js";
 import teamspaceRouter from "./routes/teamspace.route.js";
 import canvasRouter from "./routes/canvas.route.js";
 import chatRouter from "./routes/chat.route.js";
+import noteRouter from "./routes/note.route.js";
 const app = express();
 
 app.use(express.json());
@@ -18,4 +19,5 @@ app.use("/api/auth", router);
 app.use('/api/teamspace', teamspaceRouter)
 app.use("/api/teamspace", canvasRouter);
 app.use('/api/teamspace' , chatRouter)
+app.use('/api/teamspace' , noteRouter)
 export default app;
