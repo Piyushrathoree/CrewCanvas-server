@@ -1,18 +1,21 @@
 import { Router } from "express";
 
-import {getChatByTeamspace,
+import {
+    getChatByTeamspace,
     addMessageToChat,
     deleteMessage,
-    deleteWholeChat} from '../controllers/chat.controller.js';
+    
+} from "../controllers/chat.controller.js";
 
-import userMiddleware from "../middlewares/user.middleware.js";
+import { verifyJWT } from "../middlewares/user.middleware.js";
 
-const router = Router();
+const chatRouter = Router();
 
+chatRouter.use(verifyJWT); // middleware
 // routes
-router.post('/get-chat', userMiddleware, getChatByTeamspace);
-router.post('/add-message', userMiddleware, addMessageToChat);     
-router.put('/delete-message', userMiddleware, deleteMessage);
-router.delete('/delete-chat', userMiddleware, deleteWholeChat);
+chatRouter.get("/:teamspaceId/get-chat", getChatByTeamspace);
+chatRouter.put("/:teamspaceId/add-message", addMessageToChat);
+chatRouter.put("/:teamspaceId/delete-message/:messageId", deleteMessage);
+// chatRouter.delete("/:teamspaceId/delete-chat", deleteWholeChat);
 
-export default router;
+export default chatRouter;
