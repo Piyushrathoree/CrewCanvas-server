@@ -7,10 +7,10 @@ import {
     getTasksFromTeamspace,
     toggleTaskStatus,
 } from "../controllers/task.controller.js";
-import userMiddleware from "../middlewares/user.middleware.js";
+import {verifyJWT} from "../middlewares/user.middleware.js";
 const router = Router();
 
-router.use(userMiddleware);
+router.use(verifyJWT);
 
 //routes
 router.post("/teamspace/:teamspaceId/create-task", createTask);
