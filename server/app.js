@@ -2,6 +2,8 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import router from "./routes/user.route.js";
 import teamspaceRouter from "./routes/teamspace.route.js";
+import canvasRouter from "./routes/canvas.route.js";
+import chatRouter from "./routes/chat.route.js";
 const app = express();
 
 app.use(express.json());
@@ -14,4 +16,6 @@ app.get("/", (_, res) => {
 
 app.use("/api/auth", router);
 app.use('/api/teamspace', teamspaceRouter)
+app.use("/api/teamspace", canvasRouter);
+app.use('/api/teamspace' , chatRouter)
 export default app;
