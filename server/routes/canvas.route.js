@@ -4,12 +4,13 @@ import {
     getCanvasByTeamspace,
     updateCanvasData,
 } from "../controllers/canvas.controller.js";
-import userMiddleware from "../middlewares/user.middleware.js";
+import { verifyJWT } from "../middlewares/user.middleware.js";
 
-const router = Router();
+const canvasRouter = Router();
 
-router.get("/canvas/:teamspaceId", userMiddleware, getCanvasByTeamspace);
+canvasRouter.use(verifyJWT); // middleware
 
-router.post("/canvas/:teamspaceId", userMiddleware, updateCanvasData);
+canvasRouter.get("/:teamspaceId/canvas", getCanvasByTeamspace);
+canvasRouter.put("/:teamspaceId/canvas", updateCanvasData);
 
-export default router;
+export default canvasRouter;
