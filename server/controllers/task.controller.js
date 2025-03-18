@@ -174,7 +174,7 @@ const toggleTaskStatus = async (req, res) => {
         return res.status(404).json({ message: "Teamspace not found" });
     }
 
-    const task = await Task.findOne({ _id: taskId, teamspaceId: teamspaceId });
+    const task = await Task.findOne({ _id: taskId, teamspaceId });
     if (!task) {
         return res
             .status(404)
