@@ -14,10 +14,10 @@ const chatSchema = new Schema({
                 ref: "User",
                 required: true,
             }, // Each message has a sender
-            text: { type: String, required: true },
+            content: { type: String, required: true },
             timestamp: { type: Date, default: Date.now },
         },
-    ],
+    ],  
 });
 
 const Chat = mongoose.model("Chat", chatSchema);
