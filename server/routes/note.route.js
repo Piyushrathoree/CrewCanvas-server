@@ -8,16 +8,16 @@ import {
     deleteNote,
 } from "../controllers/note.controller.js";
 
-import userMiddleware from "../middlewares/user.middleware.js";
+import {verifyJWT} from "../middlewares/user.middleware.js";
 
-const router = Router();
+const noteRouter = Router();
 
-router.use(userMiddleware);
+noteRouter.use(verifyJWT);
 
-router.post("teamspace/:teamspaceId/create-note", createNote);
-router.get("teamspace/:teamspaceId/note/:noteId", getNoteById);
-router.get("teamspace/:teamspaceId/teamspace-notes", listNotesByTeamspace);
-router.put("teamspace/:teamspaceId/update-note/:noteId", updateNote);
-router.delete("teamspace/:teamspaceId/note-delete/:noteId", deleteNote);
+noteRouter.post("/:teamspaceId/create-note", createNote);
+noteRouter.get("/:teamspaceId/note/:noteId", getNoteById);
+noteRouter.get("/:teamspaceId/notes", listNotesByTeamspace);
+noteRouter.put("/:teamspaceId/update-note/:noteId", updateNote);
+noteRouter.delete("/:teamspaceId/delete-note/:noteId", deleteNote);
 
-export default router;
+export default noteRouter;
