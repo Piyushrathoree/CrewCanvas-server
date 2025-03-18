@@ -17,10 +17,10 @@ const createNote = async (req, res) => {
     }
 
     const note = new Note({
-        createdBy: req.user._id,
+        createdBy: req.user.id,
         title,
         content,
-        teamspace: teamspaceId,
+        teamspaceId,
     });
 
     await note.save();
@@ -31,7 +31,7 @@ const createNote = async (req, res) => {
     });
 
     res.status(201).json({ message: "Note created successfully", note });
-};
+}; // checked 
 
 const getNoteById = async (req, res) => {
     const { teamspaceId, noteId } = req.params;
@@ -42,14 +42,14 @@ const getNoteById = async (req, res) => {
 
     const note = await Note.findOne({ 
         _id: noteId,
-        teamspace: teamspaceId 
+        teamspaceId 
     });
 
     if (!note) {
         return res.status(404).json({ message: "Note not found in this teamspace" });
     }
     res.status(200).json({ note });
-};
+}; // checked 
 
 const listNotesByTeamspace = async (req, res) => {
     const { teamspaceId } = req.params;
@@ -64,11 +64,11 @@ const listNotesByTeamspace = async (req, res) => {
     }
 
     res.status(200).json({ notes: teamspace.notes });
-};
+}; // checked 
 
 const updateNote = async (req, res) => {
     const { teamspaceId, noteId } = req.params;
-    const { title, content } = req.body;
+    const { title , content } = req.body;
 
     if (!teamspaceId || !noteId) {
         return res.status(400).json({ message: "Teamspace ID and Note ID are required" });
@@ -80,8 +80,8 @@ const updateNote = async (req, res) => {
     const note = await Note.findOneAndUpdate(
         {
             _id: noteId,
-            teamspace: teamspaceId,
-            createdBy: req.user._id,
+            teamspaceId,
+            createdBy: req.user.id,
         },
         { title, content },
         { new: true }
@@ -91,7 +91,7 @@ const updateNote = async (req, res) => {
         return res.status(404).json({ message: "Note not found in this teamspace" });
     }
     res.status(200).json({ message: "Note updated successfully", note });
-};
+}; // checked 
 
 const deleteNote = async (req, res) => {
     const { teamspaceId, noteId } = req.params;
@@ -102,7 +102,7 @@ const deleteNote = async (req, res) => {
 
     const deletedNote = await Note.findOneAndDelete({
         _id: noteId,
-        teamspace: teamspaceId
+        teamspaceId
     });
 
     if (!deletedNote) {
@@ -118,7 +118,7 @@ const deleteNote = async (req, res) => {
         message: "Note deleted successfully",
         deletedNote,
     });
-};
+}; // checked 
 
 export {
     createNote,
