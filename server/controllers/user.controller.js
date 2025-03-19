@@ -54,7 +54,7 @@ export const registerUser = async (req, res) => {
             password: undefined,
         },
     });
-};
+}; // checked 
 
 export const loginUser = async (req, res) => {
     try {
@@ -85,12 +85,12 @@ export const loginUser = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
-};
+}; // checked 
 
 export const logout = (_, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "User logged out successfully" });
-};
+}; // checked 
 
 export const verifyEmail = async (req, res) => {
     const { code } = req.body;
@@ -115,7 +115,7 @@ export const verifyEmail = async (req, res) => {
         console.log(error);
         throw new Error(error);
     }
-};
+}; //checked 
 
 export const forgotPassword = async (req, res) => {
     const { email } = req.body;
@@ -156,7 +156,7 @@ export const forgotPassword = async (req, res) => {
         console.log(error);
         res.status(400).json({ success: false, message: error.message });
     }
-};
+}; // checked 
 
 export const resetPassword = async (req, res) => {
     const { token } = req.params;
@@ -187,4 +187,4 @@ export const resetPassword = async (req, res) => {
         success: true,
         message: "password reset successful",
     });
-};
+}; // checked 
