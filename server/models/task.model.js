@@ -27,7 +27,7 @@ const taskSchema = new mongoose.Schema(
         teamspaceId: {
             type: Schema.Types.ObjectId,
             ref: "Teamspace",
-            unique: true, // Ensures one canvas per Teamspace
+            required:true 
         },
     },
     { timestamps: true }

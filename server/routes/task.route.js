@@ -8,16 +8,17 @@ import {
     toggleTaskStatus,
 } from "../controllers/task.controller.js";
 import {verifyJWT} from "../middlewares/user.middleware.js";
-const router = Router();
 
-router.use(verifyJWT);
+const taskRouter = Router();
+
+taskRouter.use(verifyJWT);
 
 //routes
-router.post("/teamspace/:teamspaceId/create-task", createTask);
-router.get("/teamspace/:teamspaceId/task/:taskId", getTask);
-router.put("/teamspace/:teamspaceId/task/:taskId", updateTask);
-router.delete("/teamspace/:teamspaceId/task/:taskId", deleteTask);
-router.get("/teamspace/:teamspaceId/tasks", getTasksFromTeamspace);
-router.put("/teamspace/:teamspaceId/task/:taskId/toggle-status", toggleTaskStatus);
+taskRouter.post("/:teamspaceId/create-task", createTask);
+taskRouter.get("/:teamspaceId/task/:taskId", getTask);
+taskRouter.put("/:teamspaceId/task/:taskId", updateTask);
+taskRouter.delete("/:teamspaceId/task/:taskId", deleteTask);
+taskRouter.get("/:teamspaceId/tasks", getTasksFromTeamspace);
+taskRouter.put("/:teamspaceId/task/:taskId/toggle-status", toggleTaskStatus);
 
-export default router;
+export default taskRouter;
