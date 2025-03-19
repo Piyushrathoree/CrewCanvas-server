@@ -27,7 +27,7 @@ const getCanvasByTeamspace = async (req, res) => {
     }
 
     res.status(200).json({ message: "canvas fetched successfully ", canvas });
-};
+}; // checked 
 
 const updateCanvasData = async (req, res) => {
     const { data } = req.body;
@@ -57,6 +57,6 @@ const updateCanvasData = async (req, res) => {
     }
     await canvas.save();
     res.status(200).json({ message: "Canvas updated successfully" });
-};
+}; // checked 
 
 export { getCanvasByTeamspace, updateCanvasData };
