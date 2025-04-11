@@ -9,16 +9,11 @@ import {
     sendResetSuccessfulEmail,
 } from "../mail/emails.js";
 
-
-export const registerUser = async (req, res) => {
+const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
         return res.status(400).send("Please fill all the fields");
     }
-// -----------------------------------------------------
-// await User.collection.dropIndex("name_1");
-// ----------------------------------------------------
-
 
     let existingUser = await User.findOne({ email });
     if (existingUser) return res.status(401).send("User already exists");
@@ -56,7 +51,7 @@ export const registerUser = async (req, res) => {
     });
 }; // checked 
 
-export const loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email }).select("+password");
@@ -87,12 +82,12 @@ export const loginUser = async (req, res) => {
     }
 }; // checked 
 
-export const logout = (_, res) => {
+const logout = (_, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "User logged out successfully" });
 }; // checked 
 
-export const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res) => {
     const { code } = req.body;
     if (!code) return res.status(400).send("Please provide verification code");
 
@@ -117,7 +112,7 @@ export const verifyEmail = async (req, res) => {
     }
 }; //checked 
 
-export const forgotPassword = async (req, res) => {
+const forgotPassword = async (req, res) => {
     const { email } = req.body;
     if (!email) {
         return res
@@ -158,7 +153,7 @@ export const forgotPassword = async (req, res) => {
     }
 }; // checked 
 
-export const resetPassword = async (req, res) => {
+const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
     if (!token) {
@@ -188,3 +183,12 @@ export const resetPassword = async (req, res) => {
         message: "password reset successful",
     });
 }; // checked 
+
+export {
+    registerUser,
+    loginUser,
+    logout,
+    verifyEmail,
+    forgotPassword,
+    resetPassword,
+}
